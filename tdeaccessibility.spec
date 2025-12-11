@@ -1,6 +1,6 @@
-#
-# Please submit bugfixes or comments via http://www.trinitydesktop.org/
-#
+%bcond clang 1
+%bcond akode 1
+%bcond libmad 1
 
 # BUILD WARNING:
 #  Remove qt-devel and qt3-devel and any kde*-devel on your system !
@@ -11,6 +11,8 @@
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
+%define pkg_rel 2
+
 %define tde_pkg tdeaccessibility
 %define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
@@ -25,31 +27,24 @@
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%if 0%{?mdkversion}
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
 %define _disable_rebuild_configure 1
-%endif
 
 # fixes error: Empty %files file …/debugsourcefiles.list
 %define _debugsource_template %{nil}
 
 %define tarball_name %{tde_pkg}-trinity
-%global toolchain %(readlink /usr/bin/cc)
 
 
 Name:			trinity-tdeaccessibility
 Summary:		Trinity Desktop Environment - Accessibility
 Version:		%{tde_version}
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:		%{?!preversion:%{pkg_rel}}%{?preversion:0_%{preversion}}%{?dist}
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -59,39 +54,42 @@ Prefix:			%{tde_prefix}
 Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/core/%{tarball_name}-%{version}%{?preversion:~%{preversion}}.tar.xz
 Source1:		%{name}-rpmlintrc
 
-BuildRequires:	cmake make
+BuildSystem:	  cmake
+BuildOption:    -DCMAKE_BUILD_TYPE="RelWithDebInfo"
+BuildOption:    -DCMAKE_SKIP_RPATH=OFF
+BuildOption:    -DCMAKE_SKIP_INSTALL_RPATH=OFF
+BuildOption:    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
+BuildOption:    -DCMAKE_INSTALL_RPATH="%{tde_libdir}"
+BuildOption:    -DCMAKE_INCLUDE_PATH="%{tde_tdeincludedir}"
+BuildOption:    -DCMAKE_INSTALL_PREFIX="%{tde_prefix}"
+BuildOption:    -DBIN_INSTALL_DIR="%{tde_bindir}"
+BuildOption:    -DDOC_INSTALL_DIR="%{tde_docdir}"
+BuildOption:    -DINCLUDE_INSTALL_DIR="%{tde_tdeincludedir}"
+BuildOption:    -DLIB_INSTALL_DIR="%{tde_libdir}"
+BuildOption:    -DPKGCONFIG_INSTALL_DIR="%{tde_libdir}/pkgconfig"
+BuildOption:    -DSYSCONF_INSTALL_DIR="%{_sysconfdir}/trinity"
+BuildOption:    -DSHARE_INSTALL_PREFIX="%{tde_datadir}"
+BuildOption:    -DCONFIG_INSTALL_DIR="%{tde_confdir}"
+BuildOption:    -DWITH_ALL_OPTIONS=ON -DBUILD_ALL=ON
 
 BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	trinity-tdemultimedia-devel >= %{tde_version}
 
-%if "%{?toolchain}" != "clang"
-BuildRequires:	gcc-c++
-%endif
+%{!?with_clang:BuildRequires:	gcc-c++}
+
 BuildRequires:	desktop-file-utils
 BuildRequires:	fdupes
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # AUDIOFILE support
 BuildRequires:	pkgconfig(audiofile)
 
 # AKODE support
-%define with_akode 1
-BuildRequires: trinity-akode-devel
+%{?with_akode:BuildRequires: trinity-akode-devel}
 
 # MAD support
-%ifarch %{ix86} x86_64
-%define with_libmad 1
+%ifarch %{ix86} %{x86_64}
 %{?with_libmad:BuildRequires: libakode_mpeg_decoder}
 %endif
 
@@ -300,7 +298,7 @@ Homepage: http://accessibility.kde.org/developer/kttsd
 %{tde_tdelibdir}/kcm_kttsd.so
 %{tde_tdelibdir}/tdetexteditor_kttsd.la
 %{tde_tdelibdir}/tdetexteditor_kttsd.so
-%if 0%{?with_akode}
+%if %{with akode}
 %{tde_tdelibdir}/libkttsd_akodeplugin.la
 %{tde_tdelibdir}/libkttsd_akodeplugin.so
 %endif
@@ -338,9 +336,7 @@ Homepage: http://accessibility.kde.org/developer/kttsd
 %{tde_datadir}/icons/hicolor/*/apps/kcmkttsd.png
 %{tde_datadir}/services/tdetexteditor_kttsd.desktop
 %{tde_datadir}/services/kttsd.desktop
-%if 0%{?with_akode}
-%{tde_datadir}/services/kttsd_akodeplugin.desktop
-%endif
+%{?with_akode:%{tde_datadir}/services/kttsd_akodeplugin.desktop}
 %{tde_datadir}/services/kttsd_alsaplugin.desktop
 %{tde_datadir}/services/kttsd_artsplugin.desktop
 %{tde_datadir}/services/kttsd_commandplugin.desktop
@@ -410,65 +406,17 @@ programs.
 %{tde_libdir}/libKTTSD_Lib.so
 %{tde_tdeincludedir}/ksayit_fxplugin.h
 
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
-%prep
-%autosetup -n %{tarball_name}-%{version}%{?preversion:~%{preversion}}
-
+%prep -a
 # Update icons for some control center modules
 %__sed -i "kttsd/kcmkttsmgr/kcmkttsd.desktop" -e "s|^Icon=.*|Icon=kcmkttsd|"
 
 
-%build
+%conf -p
 unset QTDIR QTLIB QTINC
 export PATH="%{tde_bindir}:${PATH}"
 export PKG_CONFIG_PATH="%{tde_libdir}/pkgconfig:${PKG_CONFIG_PATH}"
 
-if ! rpm -E %%cmake|grep -e 'cd build\|cd ${CMAKE_BUILD_DIR:-build}'; then
-  %__mkdir_p build
-  cd build
-fi
-
-%cmake \
-  -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
-  -DCMAKE_C_FLAGS="${RPM_OPT_FLAGS}" \
-  -DCMAKE_CXX_FLAGS="${RPM_OPT_FLAGS}" \
-  -DCMAKE_SKIP_RPATH=OFF \
-  -DCMAKE_SKIP_INSTALL_RPATH=OFF \
-  -DCMAKE_INSTALL_RPATH="%{tde_libdir}" \
-  -DCMAKE_VERBOSE_MAKEFILE=ON \
-  -DWITH_GCC_VISIBILITY=OFF \
-  \
-  -DCMAKE_INCLUDE_PATH="%{tde_tdeincludedir}" \
-  -DCMAKE_INSTALL_PREFIX="%{tde_prefix}" \
-  -DBIN_INSTALL_DIR="%{tde_bindir}" \
-  -DDOC_INSTALL_DIR="%{tde_docdir}" \
-  -DINCLUDE_INSTALL_DIR="%{tde_tdeincludedir}" \
-  -DLIB_INSTALL_DIR="%{tde_libdir}" \
-  -DPKGCONFIG_INSTALL_DIR="%{tde_libdir}/pkgconfig" \
-  -DSYSCONF_INSTALL_DIR="%{_sysconfdir}/trinity" \
-  -DSHARE_INSTALL_PREFIX="%{tde_datadir}" \
-  -DCONFIG_INSTALL_DIR="%{tde_confdir}" \
-  \
-  -DWITH_ALL_OPTIONS=ON \
-  \
-  -DBUILD_ALL=ON \
-  \
-  ..
-
-%__make %{?_smp_mflags} || %__make
-
-
-%install
-export PATH="%{tde_bindir}:${PATH}"
-%__make install DESTDIR=%{buildroot} -C build
-
+%install -a
 # Adds missing icons in 'hicolor' theme
 # These icons are copied from 'crystalsvg' theme, provided by 'tdelibs'.
 %__mkdir_p "%{?buildroot}%{tde_datadir}/icons/hicolor/"{16x16,22x22,32x32,48x48,64x64,128x128}"/apps/"
@@ -480,16 +428,6 @@ popd
 # Avoid conflict with tdelibs
 %__rm -f %{?buildroot}%{tde_datadir}/icons/crystalsvg/*/apps/kttsd.png
 %__rm -f %{?buildroot}%{tde_datadir}/icons/crystalsvg/scalable/apps/kttsd.svgz
-
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -r kmag         Utility Accessibility
-%suse_update_desktop_file    kmousetool   Utility Accessibility
-%suse_update_desktop_file    kmouth       Utility Accessibility
-%suse_update_desktop_file    kttsmgr      Utility Accessibility
-%suse_update_desktop_file    ksayit       Utility Accessibility
-%suse_update_desktop_file    kcmkttsd     Utility Accessibility
-%endif
 
 # Links duplicate files
 %fdupes "%{?buildroot}%{tde_datadir}"
