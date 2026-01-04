@@ -15,17 +15,6 @@
 
 %define tde_pkg tdeaccessibility
 %define tde_prefix /opt/trinity
-%define tde_bindir %{tde_prefix}/bin
-%define tde_confdir %{_sysconfdir}/trinity
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_mandir %{tde_datadir}/man
-%define tde_tdeappdir %{tde_datadir}/applications/tde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
 
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
@@ -46,31 +35,20 @@ URL:			http://www.trinitydesktop.org/
 
 License:	GPLv2+
 
-#Vendor:		Trinity Project
-#Packager:	Francois Andriot <francois.andriot@free.fr>
-
-Prefix:			%{tde_prefix}
 
 Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/core/%{tarball_name}-%{version}%{?preversion:~%{preversion}}.tar.xz
 Source1:		%{name}-rpmlintrc
 
 BuildSystem:	  cmake
+
 BuildOption:    -DCMAKE_BUILD_TYPE="RelWithDebInfo"
-BuildOption:    -DCMAKE_SKIP_RPATH=OFF
-BuildOption:    -DCMAKE_SKIP_INSTALL_RPATH=OFF
-BuildOption:    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
-BuildOption:    -DCMAKE_INSTALL_RPATH="%{tde_libdir}"
-BuildOption:    -DCMAKE_INCLUDE_PATH="%{tde_tdeincludedir}"
-BuildOption:    -DCMAKE_INSTALL_PREFIX="%{tde_prefix}"
-BuildOption:    -DBIN_INSTALL_DIR="%{tde_bindir}"
-BuildOption:    -DDOC_INSTALL_DIR="%{tde_docdir}"
-BuildOption:    -DINCLUDE_INSTALL_DIR="%{tde_tdeincludedir}"
-BuildOption:    -DLIB_INSTALL_DIR="%{tde_libdir}"
-BuildOption:    -DPKGCONFIG_INSTALL_DIR="%{tde_libdir}/pkgconfig"
-BuildOption:    -DSYSCONF_INSTALL_DIR="%{_sysconfdir}/trinity"
-BuildOption:    -DSHARE_INSTALL_PREFIX="%{tde_datadir}"
-BuildOption:    -DCONFIG_INSTALL_DIR="%{tde_confdir}"
+BuildOption:    -DCMAKE_INCLUDE_PATH=%{tde_prefix}/include/tde
+BuildOption:    -DCMAKE_INSTALL_PREFIX=%{tde_prefix}
+BuildOption:    -DCONFIG_INSTALL_DIR=%{_sysconfdir}/trinity
+BuildOption:    -DINCLUDE_INSTALL_DIR=%{tde_prefix}/include/tde
+BuildOption:    -DPKGCONFIG_INSTALL_DIR=%{tde_prefix}/%{_lib}/pkgconfig
 BuildOption:    -DWITH_ALL_OPTIONS=ON -DBUILD_ALL=ON
+BuildOption:    -DWITH_GCC_VISIBILITY=%{!?with_clang:ON}%{?with_clang:OFF}
 
 BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
@@ -150,7 +128,7 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %files -n trinity-tde-icons-mono
 %defattr(-,root,root,-)
-%{tde_datadir}/icons/mono/
+%{tde_prefix}/share/icons/mono/
 
 ##########
 
@@ -165,10 +143,10 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %files -n trinity-kbstate
 %defattr(-,root,root,-)
-%{tde_tdelibdir}/kbstate_panelapplet.la
-%{tde_tdelibdir}/kbstate_panelapplet.so
-%{tde_datadir}/apps/kbstateapplet/
-%{tde_datadir}/apps/kicker/applets/kbstateapplet.desktop
+%{tde_prefix}/%{_lib}/trinity/kbstate_panelapplet.la
+%{tde_prefix}/%{_lib}/trinity/kbstate_panelapplet.so
+%{tde_prefix}/share/apps/kbstateapplet/
+%{tde_prefix}/share/apps/kicker/applets/kbstateapplet.desktop
 
 ##########
 
@@ -188,13 +166,13 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %files -n trinity-kmag
 %defattr(-,root,root,-)
-%{tde_bindir}/kmag
-%{tde_tdeappdir}/kmag.desktop
-%{tde_datadir}/apps/kmag/
-%{tde_datadir}/icons/hicolor/*/apps/kmag.png
-%{tde_datadir}/icons/locolor/*/apps/kmag.png
-%{tde_tdedocdir}/HTML/en/kmag/
-%{tde_mandir}/man1/kmag.1*
+%{tde_prefix}/bin/kmag
+%{tde_prefix}/share/applications/tde/kmag.desktop
+%{tde_prefix}/share/apps/kmag/
+%{tde_prefix}/share/icons/hicolor/*/apps/kmag.png
+%{tde_prefix}/share/icons/locolor/*/apps/kmag.png
+%{tde_prefix}/share/doc/tde/HTML/en/kmag/
+%{tde_prefix}/share/man/man1/kmag.1*
 
 ##########
 
@@ -211,12 +189,12 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %files -n trinity-kmousetool
 %defattr(-,root,root,-)
-%{tde_bindir}/kmousetool
-%{tde_tdeappdir}/kmousetool.desktop
-%{tde_datadir}/apps/kmousetool/
-%{tde_datadir}/icons/hicolor/*/apps/kmousetool.png
-%{tde_tdedocdir}/HTML/en/kmousetool/
-%{tde_mandir}/man1/kmousetool.1*
+%{tde_prefix}/bin/kmousetool
+%{tde_prefix}/share/applications/tde/kmousetool.desktop
+%{tde_prefix}/share/apps/kmousetool/
+%{tde_prefix}/share/icons/hicolor/*/apps/kmousetool.png
+%{tde_prefix}/share/doc/tde/HTML/en/kmousetool/
+%{tde_prefix}/share/man/man1/kmousetool.1*
 
 ##########
 
@@ -234,17 +212,17 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %files -n trinity-kmouth
 %defattr(-,root,root,-)
-%config(noreplace) %{tde_confdir}/kmouthrc
-%{tde_bindir}/kmouth
-%{tde_tdeappdir}/kmouth.desktop
-%{tde_datadir}/apps/kmouth/
-%{tde_datadir}/icons/hicolor/*/actions/speak.png
-%{tde_datadir}/icons/hicolor/*/actions/nospeak.png
-%{tde_datadir}/icons/hicolor/*/apps/kmouth.png
-%{tde_datadir}/icons/locolor/*/actions/speak.png
-%{tde_datadir}/icons/locolor/*/apps/kmouth.png
-%{tde_tdedocdir}/HTML/en/kmouth/
-%{tde_mandir}/man1/kmouth.1*
+%config(noreplace) %{_sysconfdir}/trinity/kmouthrc
+%{tde_prefix}/bin/kmouth
+%{tde_prefix}/share/applications/tde/kmouth.desktop
+%{tde_prefix}/share/apps/kmouth/
+%{tde_prefix}/share/icons/hicolor/*/actions/speak.png
+%{tde_prefix}/share/icons/hicolor/*/actions/nospeak.png
+%{tde_prefix}/share/icons/hicolor/*/apps/kmouth.png
+%{tde_prefix}/share/icons/locolor/*/actions/speak.png
+%{tde_prefix}/share/icons/locolor/*/apps/kmouth.png
+%{tde_prefix}/share/doc/tde/HTML/en/kmouth/
+%{tde_prefix}/share/man/man1/kmouth.1*
 
 ##########
 
@@ -259,19 +237,19 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %files -n trinity-ksayit
 %defattr(-,root,root,-)
-%{tde_bindir}/ksayit
-%{tde_tdelibdir}/libFreeverb_plugin.la
-%{tde_tdelibdir}/libFreeverb_plugin.so
-%{tde_libdir}/libKTTSD_Lib.so.*
-%{tde_tdeappdir}/ksayit.desktop
-%{tde_datadir}/apps/ksayit/
-%{tde_datadir}/icons/hicolor/*/apps/ksayit.png
-%{tde_datadir}/icons/hicolor/32x32/apps/ksayit_clipempty.png
-%{tde_datadir}/icons/hicolor/32x32/apps/ksayit_talking.png
-%{tde_datadir}/services/ksayit_libFreeverb.desktop
-%{tde_datadir}/servicetypes/ksayit_libFreeverb_service.desktop
-%{tde_tdedocdir}/HTML/en/ksayit/
-%{tde_mandir}/man1/ksayit.1*
+%{tde_prefix}/bin/ksayit
+%{tde_prefix}/%{_lib}/trinity/libFreeverb_plugin.la
+%{tde_prefix}/%{_lib}/trinity/libFreeverb_plugin.so
+%{tde_prefix}/%{_lib}/libKTTSD_Lib.so.*
+%{tde_prefix}/share/applications/tde/ksayit.desktop
+%{tde_prefix}/share/apps/ksayit/
+%{tde_prefix}/share/icons/hicolor/*/apps/ksayit.png
+%{tde_prefix}/share/icons/hicolor/32x32/apps/ksayit_clipempty.png
+%{tde_prefix}/share/icons/hicolor/32x32/apps/ksayit_talking.png
+%{tde_prefix}/share/services/ksayit_libFreeverb.desktop
+%{tde_prefix}/share/servicetypes/ksayit_libFreeverb_service.desktop
+%{tde_prefix}/share/doc/tde/HTML/en/ksayit/
+%{tde_prefix}/share/man/man1/ksayit.1*
 
 ##########
 
@@ -292,68 +270,68 @@ Homepage: http://accessibility.kde.org/developer/kttsd
 
 %files -n trinity-kttsd
 %defattr(-,root,root,-)
-%{tde_bindir}/kttsd
-%{tde_bindir}/kttsmgr
-%{tde_tdelibdir}/kcm_kttsd.la
-%{tde_tdelibdir}/kcm_kttsd.so
-%{tde_tdelibdir}/tdetexteditor_kttsd.la
-%{tde_tdelibdir}/tdetexteditor_kttsd.so
+%{tde_prefix}/bin/kttsd
+%{tde_prefix}/bin/kttsmgr
+%{tde_prefix}/%{_lib}/trinity/kcm_kttsd.la
+%{tde_prefix}/%{_lib}/trinity/kcm_kttsd.so
+%{tde_prefix}/%{_lib}/trinity/tdetexteditor_kttsd.la
+%{tde_prefix}/%{_lib}/trinity/tdetexteditor_kttsd.so
 %if %{with akode}
-%{tde_tdelibdir}/libkttsd_akodeplugin.la
-%{tde_tdelibdir}/libkttsd_akodeplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_akodeplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_akodeplugin.so
 %endif
-%{tde_tdelibdir}/libkttsd_alsaplugin.la
-%{tde_tdelibdir}/libkttsd_alsaplugin.so
-%{tde_tdelibdir}/libkttsd_artsplugin.la
-%{tde_tdelibdir}/libkttsd_artsplugin.so
-%{tde_tdelibdir}/libkttsd_commandplugin.la
-%{tde_tdelibdir}/libkttsd_commandplugin.so
-%{tde_tdelibdir}/libkttsd_eposplugin.la
-%{tde_tdelibdir}/libkttsd_eposplugin.so
-%{tde_tdelibdir}/libkttsd_festivalintplugin.la
-%{tde_tdelibdir}/libkttsd_festivalintplugin.so
-%{tde_tdelibdir}/libkttsd_fliteplugin.la
-%{tde_tdelibdir}/libkttsd_fliteplugin.so
-%{tde_tdelibdir}/libkttsd_sbdplugin.la
-%{tde_tdelibdir}/libkttsd_sbdplugin.so
-%{tde_tdelibdir}/libkttsd_stringreplacerplugin.la
-%{tde_tdelibdir}/libkttsd_stringreplacerplugin.so
-%{tde_tdelibdir}/libkttsd_talkerchooserplugin.la
-%{tde_tdelibdir}/libkttsd_talkerchooserplugin.so
-%{tde_tdelibdir}/libkttsd_xmltransformerplugin.la
-%{tde_tdelibdir}/libkttsd_xmltransformerplugin.so
-%{tde_tdelibdir}/libkttsjobmgrpart.la
-%{tde_tdelibdir}/libkttsjobmgrpart.so
-%{tde_libdir}/libkttsd.so.*
-%{tde_tdeappdir}/kcmkttsd.desktop
-%{tde_tdeappdir}/kttsmgr.desktop
-%{tde_datadir}/apps/tdetexteditor_kttsd/
-%exclude %{tde_datadir}/apps/kttsd/hadifix/xslt/SSMLtoTxt2pho.xsl
-%{tde_datadir}/apps/kttsd/
-%{tde_datadir}/icons/hicolor/16x16/actions/female.png
-%{tde_datadir}/icons/hicolor/16x16/actions/male.png
-%{tde_datadir}/icons/hicolor/*/apps/kttsd.png
-%{tde_datadir}/icons/hicolor/*/apps/kcmkttsd.png
-%{tde_datadir}/services/tdetexteditor_kttsd.desktop
-%{tde_datadir}/services/kttsd.desktop
-%{?with_akode:%{tde_datadir}/services/kttsd_akodeplugin.desktop}
-%{tde_datadir}/services/kttsd_alsaplugin.desktop
-%{tde_datadir}/services/kttsd_artsplugin.desktop
-%{tde_datadir}/services/kttsd_commandplugin.desktop
-%{tde_datadir}/services/kttsd_eposplugin.desktop
-%{tde_datadir}/services/kttsd_festivalintplugin.desktop
-%{tde_datadir}/services/kttsd_fliteplugin.desktop
-%{tde_datadir}/services/kttsd_sbdplugin.desktop
-%{tde_datadir}/services/kttsd_stringreplacerplugin.desktop
-%{tde_datadir}/services/kttsd_talkerchooserplugin.desktop
-%{tde_datadir}/services/kttsd_xmltransformerplugin.desktop
-%{tde_datadir}/services/kttsjobmgr.desktop
-%{tde_datadir}/servicetypes/kttsd_audioplugin.desktop
-%{tde_datadir}/servicetypes/kttsd_filterplugin.desktop
-%{tde_datadir}/servicetypes/kttsd_synthplugin.desktop
-%{tde_tdedocdir}/HTML/en/kttsd/
-%{tde_mandir}/man1/kttsd.1*
-%{tde_mandir}/man1/kttsmgr.1*
+%{tde_prefix}/%{_lib}/trinity/libkttsd_alsaplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_alsaplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_artsplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_artsplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_commandplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_commandplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_eposplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_eposplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_festivalintplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_festivalintplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_fliteplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_fliteplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_sbdplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_sbdplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_stringreplacerplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_stringreplacerplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_talkerchooserplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_talkerchooserplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_xmltransformerplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_xmltransformerplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsjobmgrpart.la
+%{tde_prefix}/%{_lib}/trinity/libkttsjobmgrpart.so
+%{tde_prefix}/%{_lib}/libkttsd.so.*
+%{tde_prefix}/share/applications/tde/kcmkttsd.desktop
+%{tde_prefix}/share/applications/tde/kttsmgr.desktop
+%{tde_prefix}/share/apps/tdetexteditor_kttsd/
+%exclude %{tde_prefix}/share/apps/kttsd/hadifix/xslt/SSMLtoTxt2pho.xsl
+%{tde_prefix}/share/apps/kttsd/
+%{tde_prefix}/share/icons/hicolor/16x16/actions/female.png
+%{tde_prefix}/share/icons/hicolor/16x16/actions/male.png
+%{tde_prefix}/share/icons/hicolor/*/apps/kttsd.png
+%{tde_prefix}/share/icons/hicolor/*/apps/kcmkttsd.png
+%{tde_prefix}/share/services/tdetexteditor_kttsd.desktop
+%{tde_prefix}/share/services/kttsd.desktop
+%{?with_akode:%{tde_prefix}/share/services/kttsd_akodeplugin.desktop}
+%{tde_prefix}/share/services/kttsd_alsaplugin.desktop
+%{tde_prefix}/share/services/kttsd_artsplugin.desktop
+%{tde_prefix}/share/services/kttsd_commandplugin.desktop
+%{tde_prefix}/share/services/kttsd_eposplugin.desktop
+%{tde_prefix}/share/services/kttsd_festivalintplugin.desktop
+%{tde_prefix}/share/services/kttsd_fliteplugin.desktop
+%{tde_prefix}/share/services/kttsd_sbdplugin.desktop
+%{tde_prefix}/share/services/kttsd_stringreplacerplugin.desktop
+%{tde_prefix}/share/services/kttsd_talkerchooserplugin.desktop
+%{tde_prefix}/share/services/kttsd_xmltransformerplugin.desktop
+%{tde_prefix}/share/services/kttsjobmgr.desktop
+%{tde_prefix}/share/servicetypes/kttsd_audioplugin.desktop
+%{tde_prefix}/share/servicetypes/kttsd_filterplugin.desktop
+%{tde_prefix}/share/servicetypes/kttsd_synthplugin.desktop
+%{tde_prefix}/share/doc/tde/HTML/en/kttsd/
+%{tde_prefix}/share/man/man1/kttsd.1*
+%{tde_prefix}/share/man/man1/kttsmgr.1*
 
 ##########
 
@@ -373,13 +351,13 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %files -n trinity-kttsd-contrib-plugins
 %defattr(-,root,root,-)
-%{tde_tdelibdir}/libkttsd_freettsplugin.la
-%{tde_tdelibdir}/libkttsd_freettsplugin.so
-%{tde_tdelibdir}/libkttsd_hadifixplugin.la
-%{tde_tdelibdir}/libkttsd_hadifixplugin.so
-%{tde_datadir}/apps/kttsd/hadifix/xslt/SSMLtoTxt2pho.xsl
-%{tde_datadir}/services/kttsd_freettsplugin.desktop
-%{tde_datadir}/services/kttsd_hadifixplugin.desktop
+%{tde_prefix}/%{_lib}/trinity/libkttsd_freettsplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_freettsplugin.so
+%{tde_prefix}/%{_lib}/trinity/libkttsd_hadifixplugin.la
+%{tde_prefix}/%{_lib}/trinity/libkttsd_hadifixplugin.so
+%{tde_prefix}/share/apps/kttsd/hadifix/xslt/SSMLtoTxt2pho.xsl
+%{tde_prefix}/share/services/kttsd_freettsplugin.desktop
+%{tde_prefix}/share/services/kttsd_hadifixplugin.desktop
 
 ##########
 
@@ -400,11 +378,11 @@ programs.
 
 %files devel
 %defattr(-,root,root,-)
-%{tde_libdir}/libkttsd.la
-%{tde_libdir}/libkttsd.so
-%{tde_libdir}/libKTTSD_Lib.la
-%{tde_libdir}/libKTTSD_Lib.so
-%{tde_tdeincludedir}/ksayit_fxplugin.h
+%{tde_prefix}/%{_lib}/libkttsd.la
+%{tde_prefix}/%{_lib}/libkttsd.so
+%{tde_prefix}/%{_lib}/libKTTSD_Lib.la
+%{tde_prefix}/%{_lib}/libKTTSD_Lib.so
+%{tde_prefix}/include/tde/ksayit_fxplugin.h
 
 %prep -a
 # Update icons for some control center modules
@@ -413,22 +391,22 @@ programs.
 
 %conf -p
 unset QTDIR QTLIB QTINC
-export PATH="%{tde_bindir}:${PATH}"
-export PKG_CONFIG_PATH="%{tde_libdir}/pkgconfig:${PKG_CONFIG_PATH}"
+export PATH="%{tde_prefix}/bin:${PATH}"
+export PKG_CONFIG_PATH="%{tde_prefix}/%{_lib}/pkgconfig:${PKG_CONFIG_PATH}"
 
 %install -a
 # Adds missing icons in 'hicolor' theme
 # These icons are copied from 'crystalsvg' theme, provided by 'tdelibs'.
-%__mkdir_p "%{?buildroot}%{tde_datadir}/icons/hicolor/"{16x16,22x22,32x32,48x48,64x64,128x128}"/apps/"
-pushd "%{?buildroot}%{tde_datadir}/icons"
-for i in {16,22,32,48,64,128}; do %__cp %{tde_datadir}/icons/crystalsvg/"$i"x"$i"/apps/kttsd.png  hicolor/"$i"x"$i"/apps/kttsd.png    ;done
-for i in {16,22,32,48,64,128}; do %__cp %{tde_datadir}/icons/crystalsvg/"$i"x"$i"/apps/kttsd.png  hicolor/"$i"x"$i"/apps/kcmkttsd.png ;done
+%__mkdir_p "%{?buildroot}%{tde_prefix}/share/icons/hicolor/"{16x16,22x22,32x32,48x48,64x64,128x128}"/apps/"
+pushd "%{?buildroot}%{tde_prefix}/share/icons"
+for i in {16,22,32,48,64,128}; do %__cp %{tde_prefix}/share/icons/crystalsvg/"$i"x"$i"/apps/kttsd.png  hicolor/"$i"x"$i"/apps/kttsd.png    ;done
+for i in {16,22,32,48,64,128}; do %__cp %{tde_prefix}/share/icons/crystalsvg/"$i"x"$i"/apps/kttsd.png  hicolor/"$i"x"$i"/apps/kcmkttsd.png ;done
 popd
 
 # Avoid conflict with tdelibs
-%__rm -f %{?buildroot}%{tde_datadir}/icons/crystalsvg/*/apps/kttsd.png
-%__rm -f %{?buildroot}%{tde_datadir}/icons/crystalsvg/scalable/apps/kttsd.svgz
+%__rm -f %{?buildroot}%{tde_prefix}/share/icons/crystalsvg/*/apps/kttsd.png
+%__rm -f %{?buildroot}%{tde_prefix}/share/icons/crystalsvg/scalable/apps/kttsd.svgz
 
 # Links duplicate files
-%fdupes "%{?buildroot}%{tde_datadir}"
+%fdupes "%{?buildroot}%{tde_prefix}/share"
 
