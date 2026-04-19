@@ -7,12 +7,6 @@
 #  Having KDE libraries may cause FTBFS here !
 
 # TDE variables
-%define tde_epoch 2
-%if "%{?tde_version}" == ""
-%define tde_version 14.1.5
-%endif
-%define pkg_rel 2
-
 %define tde_pkg tdeaccessibility
 %define tde_prefix /opt/trinity
 
@@ -28,15 +22,15 @@
 
 Name:			trinity-tdeaccessibility
 Summary:		Trinity Desktop Environment - Accessibility
-Version:		%{tde_version}
-Release:		%{?!preversion:%{pkg_rel}}%{?preversion:0_%{preversion}}%{?dist}
+Version:		14.1.5
+Release:		3
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
 License:	GPLv2+
 
 
-Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/core/%{tarball_name}-%{version}%{?preversion:~%{preversion}}.tar.xz
+Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/core/%{tarball_name}-%{version}%{?preversion:~%{preversion}}.tar.xz
 Source1:		%{name}-rpmlintrc
 
 BuildSystem:	  cmake
@@ -50,10 +44,10 @@ BuildOption:    -DPKGCONFIG_INSTALL_DIR=%{tde_prefix}/%{_lib}/pkgconfig
 BuildOption:    -DWITH_ALL_OPTIONS=ON -DBUILD_ALL=ON
 BuildOption:    -DWITH_GCC_VISIBILITY=%{!?with_clang:ON}%{?with_clang:OFF}
 
-BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
-BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
-BuildRequires:	trinity-tdebase-devel >= %{tde_version}
-BuildRequires:	trinity-tdemultimedia-devel >= %{tde_version}
+BuildRequires:	trinity-arts-devel >= 1.5.10
+BuildRequires:	trinity-tdelibs-devel >= %{version}
+BuildRequires:	trinity-tdebase-devel >= %{version}
+BuildRequires:	trinity-tdemultimedia-devel >= %{version}
 
 %{!?with_clang:BuildRequires:	gcc-c++}
 
@@ -89,19 +83,19 @@ BuildRequires:  pkgconfig(xau)
 BuildRequires:  pkgconfig(xtst)
 BuildRequires:  pkgconfig(xrender)
 
-Obsoletes:		trinity-kdeaccessibility < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:		trinity-kdeaccessibility = %{?epoch:%{epoch}:}%{version}-%{release}
-Obsoletes:		trinity-kdeaccessibility-libs < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:		trinity-kdeaccessibility-libs = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:		trinity-kdeaccessibility < %{EVRD}
+Provides:		trinity-kdeaccessibility = %{EVRD}
+Obsoletes:		trinity-kdeaccessibility-libs < %{EVRD}
+Provides:		trinity-kdeaccessibility-libs = %{EVRD}
 
-Requires: trinity-tde-icons-mono = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-kbstate = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-kmag = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-kmousetool = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-kmouth = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-ksayit = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-kttsd = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-kttsd-contrib-plugins = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: trinity-tde-icons-mono = %{EVRD}
+Requires: trinity-kbstate = %{EVRD}
+Requires: trinity-kmag = %{EVRD}
+Requires: trinity-kmousetool = %{EVRD}
+Requires: trinity-kmouth = %{EVRD}
+Requires: trinity-ksayit = %{EVRD}
+Requires: trinity-kttsd = %{EVRD}
+Requires: trinity-kttsd-contrib-plugins = %{EVRD}
 
 %description
 Included with this package are:
@@ -118,8 +112,8 @@ Included with this package are:
 Summary:	A monochromatic icons theme for TDE
 Group:		System/GUI/Other
 
-Obsoletes:	trinity-kde-icons-mono < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-kde-icons-mono = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-kde-icons-mono < %{EVRD}
+Provides:	trinity-kde-icons-mono = %{EVRD}
 
 %description -n trinity-tde-icons-mono
 A monochromatic icon theme for TDE, designed for accessibility purposes.
@@ -338,7 +332,7 @@ Homepage: http://accessibility.kde.org/developer/kttsd
 %package -n trinity-kttsd-contrib-plugins
 Summary:	The TDE Text-to-Speech system
 Group:		System/GUI/Other
-Requires:	trinity-kttsd = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-kttsd = %{EVRD}
 
 %description -n trinity-kttsd-contrib-plugins
 kttsd synthetizer plugins that depends on non-free software :
@@ -364,13 +358,13 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 %package devel
 Summary:	Development files for tdeaccessibility
 Group:		Development/Libraries/X11
-Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	%{name} = %{EVRD}
 Requires:	trinity-tdelibs-devel >= %{version}
 Requires:	pkgconfig(libjpeg)
 Requires:	pkgconfig(libpng)
 
-Obsoletes:		trinity-kdeaccessibility-devel < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:		trinity-kdeaccessibility-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:		trinity-kdeaccessibility-devel < %{EVRD}
+Provides:		trinity-kdeaccessibility-devel = %{EVRD}
 
 %description devel
 This package contains the development file for TDE accessibility 
