@@ -30,7 +30,7 @@ URL:			http://www.trinitydesktop.org/
 License:	GPLv2+
 
 
-Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/core/%{tarball_name}-%{version}%{?preversion:~%{preversion}}.tar.xz
+Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/core/%{tarball_name}-%{version}.tar.xz
 Source1:		%{name}-rpmlintrc
 
 BuildSystem:	  cmake
@@ -48,6 +48,7 @@ BuildRequires:	trinity-arts-devel >= 1.5.10
 BuildRequires:	trinity-tdelibs-devel >= %{version}
 BuildRequires:	trinity-tdebase-devel >= %{version}
 BuildRequires:	trinity-tdemultimedia-devel >= %{version}
+BuildRequires:  trinity-tde-cmake
 
 %{!?with_clang:BuildRequires:	gcc-c++}
 
@@ -62,7 +63,7 @@ BuildRequires:	pkgconfig(audiofile)
 
 # MAD support
 %ifarch %{ix86} %{x86_64}
-%{?with_libmad:BuildRequires: libakode_mpeg_decoder}
+%{?with_libmad:BuildRequires: %{_lib}akode_mpeg_decoder}
 %endif
 
 # ALSA support
