@@ -15,15 +15,15 @@
 %define _disable_rebuild_configure 1
 
 # fixes error: Empty %files file …/debugsourcefiles.list
-%define _debugsource_template %{nil}
+%undefine _debugsource_template
 
 %define tarball_name %{tde_pkg}-trinity
 
 
 Name:			trinity-tdeaccessibility
 Summary:		Trinity Desktop Environment - Accessibility
-Version:		14.1.5
-Release:		3
+Version:		14.1.6
+Release:		1
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
@@ -44,11 +44,11 @@ BuildOption:    -DPKGCONFIG_INSTALL_DIR=%{tde_prefix}/%{_lib}/pkgconfig
 BuildOption:    -DWITH_ALL_OPTIONS=ON -DBUILD_ALL=ON
 BuildOption:    -DWITH_GCC_VISIBILITY=%{!?with_clang:ON}%{?with_clang:OFF}
 
-BuildRequires:	trinity-arts-devel >= 1.5.10
+BuildRequires:	trinity-arts-devel >= %{version}
 BuildRequires:	trinity-tdelibs-devel >= %{version}
 BuildRequires:	trinity-tdebase-devel >= %{version}
 BuildRequires:	trinity-tdemultimedia-devel >= %{version}
-BuildRequires:  trinity-tde-cmake
+BuildRequires:  trinity-tde-cmake >= %{version}
 
 %{!?with_clang:BuildRequires:	gcc-c++}
 
@@ -59,11 +59,11 @@ BuildRequires:	fdupes
 BuildRequires:	pkgconfig(audiofile)
 
 # AKODE support
-%{?with_akode:BuildRequires: trinity-akode-devel}
+%{?with_akode:BuildRequires: trinity-akode-devel >= %{version}}
 
 # MAD support
 %ifarch %{ix86} %{x86_64}
-%{?with_libmad:BuildRequires: %{_lib}akode_mpeg_decoder}
+%{?with_libmad:BuildRequires: %{_lib}akode_mpeg_decoder >= %{version}}
 %endif
 
 # ALSA support
